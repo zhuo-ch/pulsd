@@ -29,7 +29,6 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
 }
 
 input {
@@ -37,7 +36,19 @@ input {
   border: 1px solid grey;
 }
 
+.admin-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 50px;
+}
+
 .button {
   padding: 3px;
   border-radius: 3px;
+  width: 20%;
+}
+
+.event-item:hover {
+  cursor: pointer;
+  color: blue;
 }

@@ -20,6 +20,7 @@ class Admin extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleShow = this.handleShow.bind(this);
     this.setData = this.setData.bind(this);
   }
 
@@ -42,9 +43,7 @@ class Admin extends React.Component {
   }
 
   setData(snapshot) {
-    const events = Object.keys(snapshot).map(event => snapshot[event]);
-
-    this.setState({ events });
+    this.setState({ events: snapshot });
   }
 
   handleChange(e) {
@@ -59,6 +58,13 @@ class Admin extends React.Component {
     const event = this.getEventObject();
 
     this.firebase.push(event);
+  }
+
+  handleShow(e) {
+    e.preventDefault();
+    const events = merge({}, this.state.events);
+    events[e.currentTarget.id].show = events[e.currentTarget.id].show ? false : true;
+    this.setState({ events });
   }
 
   getEventObject() {
@@ -80,9 +86,9 @@ class Admin extends React.Component {
     const form = this.genForm();
 
     return (
-      <div>
+      <div className='admin-container'>
         { form }
-        <EventList list={ this.state.events } />
+        <EventList list={ this.state.events } click={ this.handleShow } />
       </div>
     );
   }
