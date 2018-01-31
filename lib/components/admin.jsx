@@ -16,14 +16,16 @@ class Admin extends React.Component {
       end_time_zone: '',
       currency: 'USD',
       listed: false,
+      events: [],
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.setData = this.setData.bind(this);
   }
 
   componentDidMount() {
     this.setFirebase();
-    this.setData();
+    this.firebase.on('value', snapshot => this.setData(snapshot.val()));
     this.dateString = new Date().toTimeString();
     const dateISO = new Date().toISOString().slice(0, 16);
     const timeZone = this.dateString.split(' ')[1].slice(0, 3);
@@ -35,15 +37,14 @@ class Admin extends React.Component {
     });
   }
 
-  setData() {
-    this.firebase.on('value', snapshot => {
-      const events = snapshot.val();
-      this.setState( events );
-    });
-  }
-
   setFirebase() {
     this.firebase = firebase.database().ref('events');
+  }
+
+  setData(snapshot) {
+    const events = Object.keys(snapshot).map(event => snapshot[event]);
+
+    this.setState({ events });
   }
 
   handleChange(e) {
@@ -56,7 +57,7 @@ class Admin extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const event = this.getEventObject();
-    debugger
+
     this.firebase.push(event);
   }
 
