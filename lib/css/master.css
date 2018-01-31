@@ -1,0 +1,43 @@
+body, main, div, section, a, input, li {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  box-sizing: inherit;
+  background: transparent;
+  opacity: inherit;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: whitesmoke;
+  font-family: 'Open Sans', sans-serif;
+  height: 100%;
+  width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input {
+  background-color: white;
+  border: 1px solid grey;
+}
+
+.button {
+  padding: 3px;
+  border-radius: 3px;
+}
