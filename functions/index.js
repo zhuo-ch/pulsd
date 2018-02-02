@@ -12,7 +12,7 @@ const keys = require('./config.js');
 exports.syndicate = functions.database
   .ref('/events/{eventId}')
   .onCreate(event => {
-    return sendEventbrite(event);
+    return sendEventbrite(event, callback.apply(this));
   });
 
 const sendXing = event => {
@@ -45,9 +45,6 @@ const sendEventbrite = event => {
 }
 
 const callback = (err, res, body) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(res);
-  }
+  let data = err ? err : res;
+  functions.database.ref('/responses').set(response);
 }

@@ -1,4 +1,4 @@
-body, main, div, section, a, input, ul, li {
+body, div, form, input, ul, li {
   margin: 0;
   padding: 0;
   border: 0;
@@ -25,27 +25,59 @@ body {
   width: 100%;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 input {
   background-color: white;
   border: 1px solid grey;
 }
 
+li {
+  list-style: none;
+}
+
 .admin-container {
   display: flex;
   justify-content: space-around;
-  padding: 50px;
+  padding: 10%;
+}
+
+.event-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: white;
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.form-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 10px 0px;
 }
 
 .button {
-  padding: 3px;
+  background-color: gainsboro;
+  padding: 4px;
   border-radius: 3px;
-  width: 20%;
+  margin: 10px 0px;
+  max-width: max-content;
+}
+
+.button:hover {
+  background-color: silver;
+  cursor: pointer;
+}
+
+.events-list {
+  flex: 1;
+  margin: 20px;
+}
+
+.details-list {
+  padding: 15px;
 }
 
 .event-item:hover {

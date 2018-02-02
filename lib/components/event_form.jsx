@@ -2,69 +2,41 @@ import React from 'react';
 
 export const eventForm = ({ state, change, submit }) => {
   return (
-    <form>
-      { getName(change, state) }
-      { getDescription(change, state) }
-      { getStart(change, state) }
-      { getEnd(change, state) }
+    <form className='event-form'>
+      { getField('text', 'name', state, change) }
+      { getDescription('description', state, change) }
+      { getField('datetime-local', 'start', state, change) }
+      { getField('datetime-local', 'end', state, change) }
       { getSubmit(submit) }
     </form>
   );
 }
 
-const getName = (handleChange, state) => {
+const getField = (type, text, state, handleChange) => {
   return (
-    <label>
-      Event Name:
+    <label className='form-label'>
+      Event { text }
       <input
-        type='text'
-        name='name'
-        onChange={ handleChange } value={ state.name }></input>
+        type={ type }
+        name={ text }
+        value={ state[text] }
+        onChange={ handleChange }>
+      </input>
     </label>
   );
 }
 
-const getDescription = (handleChange, state) => {
+const getDescription = (text, state, handleChange) => {
   return (
-    <label>
-      Event Description:
+    <label className='form-label'>
+      Event { text }
       <textarea
-        type='text'
-        name='description'
-        onChange= { handleChange }
-        value={ state.description }
-        />
+        name={ text }
+        value={ state[text] }
+        onChange={ handleChange }>
+      </textarea>
     </label>
-  );
-}
-
-const getStart = (handleChange, state) => {
-  return (
-    <label>
-      Event Start Date/Time:
-      <input
-        type='datetime-local'
-        name='start'
-        onChange={ handleChange }
-        value={ state.start }
-        min={ state.start }>
-      </input>
-    </label>
-  );
-}
-
-const getEnd = (handleChange, state) => {
-  return (
-    <label>
-      Event End Date/Time (24 hour format):
-      <input
-        type='datetime-local'
-        name='end'
-        onChange= { handleChange }
-        value={ state.end }>
-      </input>
-    </label>
-  );
+  )
 }
 
 const getSubmit = handleSubmit => {
