@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const request = require('request');
+const rp = require('request-promise');
 const keys = require('./config.js');
 
 // Create and Deploy Your First Cloud Functions
@@ -12,7 +13,15 @@ const keys = require('./config.js');
 exports.syndicate = functions.database
   .ref('/events/{eventId}')
   .onCreate(event => {
-    return sendEventbrite(event, callback.apply(this));
+    const callback = (data, functions) => {
+      console.log(functions.database.ref('/submissions'));
+      console.log(data);
+      return event.data.ref.child('submissions').set(data);
+    }
+
+    return rp(sendEventbrite(event))
+      .then(data => callback(data, functions))
+      .catch(err => console.log(err.error));
   });
 
 const sendXing = event => {
@@ -30,21 +39,15 @@ const sendXing = event => {
     data: data
   }
 
-  return request(options, callback);
+  return options;
 }
 
 const sendEventbrite = event => {
-  event.token = keys.eventbrite;
-  const options = {
-    url: 'https://www.eventbriteapi.com/v3/posts/',
+  return ({
+    url: 'https://www.eventbriteapi.com/v3/events/',
     method: 'POST',
-    data: event
-  }
-
-  return request(options, callback);
-}
-
-const callback = (err, res, body) => {
-  let data = err ? err : res;
-  functions.database.ref('/responses').set(response);
+    headers: { "Authorization": `Bearer ${keys.eventbrite}` },
+    data: event,
+    json: true
+  });
 }
