@@ -8,7 +8,7 @@ body, div, form, input, ul, li {
   text-align: inherit;
   text-decoration: inherit;
   vertical-align: inherit;
-  box-sizing: inherit;
+  box-sizing: border-box;
   background: transparent;
   opacity: inherit;
 }

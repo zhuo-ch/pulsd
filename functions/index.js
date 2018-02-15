@@ -31,7 +31,7 @@ const sendXing = event => {
     description: event.description,
     country: 'USA',
     selectedDate: event.start,
-    hostId: keys.xingId
+    hostId: keys.xing.xingId
   }
 
   return ({
@@ -44,7 +44,7 @@ const sendXing = event => {
 const sendEventbrite = event => {
   return ({
     url: 'https://www.eventbriteapi.com/v3/events/',
-    headers: { "Authorization": `Bearer ${keys.eventbrite}` },
+    headers: { "Authorization": `Bearer ${keys.eventbrite.key}` },
     data: { event },
   });
 }
