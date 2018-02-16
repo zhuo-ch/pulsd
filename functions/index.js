@@ -1,7 +1,8 @@
 const functions = require('firebase-functions');
 const request = require('request');
 const rp = require('request-promise');
-const keys = require('./config.js');
+const keys = require('./config');
+const eventful = require('./eventful');
 
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -18,11 +19,18 @@ exports.syndicate = functions.database
     }
     const formData = event.data.val();
 
-    rp.post(sendEventbrite(formatEventbrite(formData)))
-      .then(data => callback(data, functions))
-      .catch(err => console.log(err.error));
+    return rp.post(eventful.genEventfulToken());
+    // rp.post(sendEventbrite(formatEventbrite(formData)))
+    //   .then(data => callback(data, functions))
+    //   .catch(err => console.log(err.error));
 
-    rp.post(sendXing)
+    // rp.post(sendXing)
+  });
+
+exports.eventful = functions.https
+  .onRequest((request, response) => {
+    console.log(request);
+    response.send();
   });
 
 const sendXing = event => {

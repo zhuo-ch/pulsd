@@ -3,7 +3,7 @@ const request = require('request');
 const config = require('./config.js');
 
 module.exports = {
-  genEventfulRequest: event => {
+  genEventfulToken: () => {
     const { url, method } = config.eventful.requestToken;
 
     return ({
