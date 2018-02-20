@@ -4,38 +4,39 @@ import { merge } from 'lodash';
 import EventList from './event_list';
 import { eventForm } from './event_form';
 
+const _nullState = {
+  name: '',
+  description: '',
+  start: '',
+  start_time_zone: 'America/New_York',
+  end: '',
+  end_time_zone: 'America/New_York',
+  currency: 'USD',
+  listed: false,
+  events: [],
+  submissions: {},
+  submit: true,
+}
+
 class Admin extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: '',
-      description: '',
-      start: '',
-      start_time_zone: '',
-      end: '',
-      end_time_zone: '',
-      currency: 'USD',
-      listed: false,
-      events: [],
-    }
+    this.state = _nullState;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleShow = this.handleShow.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.reset = this.reset.bind(this);
     this.setData = this.setData.bind(this);
+    this.logSnap = this.logSnap.bind(this);
   }
 
   componentDidMount() {
     this.setFirebase();
     this.firebase.on('value', snapshot => this.setData(snapshot.val()));
-    this.dateString = new Date().toTimeString();
     const dateISO = new Date().toISOString().slice(0, 16);
-    const timeZone = this.dateString.split(' ')[1].slice(0, 3);
 
-    this.setState({
-      start_time_zone: timeZone,
-      end_time_zone: timeZone,
-      start: dateISO,
-    });
+    this.setState({ start: dateISO });
   }
 
   setFirebase() {
@@ -57,7 +58,14 @@ class Admin extends React.Component {
     e.preventDefault();
     const event = this.getEventObject();
 
-    this.firebase.push(event);
+    this.firebase
+      .push(event)
+      .then(() => this.toggle());
+      // .then(snap => this.logSnap(snap));
+      // // .then(() => {
+      // //   const newState = merge({}, _nullState, { events: this.state.events });
+      // //   this.setState(newState);
+      // // });
   }
 
   handleShow(e) {
@@ -67,11 +75,31 @@ class Admin extends React.Component {
     this.setState({ events });
   }
 
+  reset() {
+    const state = merge({}, _nullState, { events: this.state.events });
+    this.setState(state);
+  }
+
+  toggle() {
+    this.setState({ submit: this.state.submit ? false : true });
+  }
+
+  logSnap(key) {
+    this.setState({ submissions: { key } });
+  }
+
   getEventObject() {
-    const event = merge({}, this.state);
+    const start = this.toISO(this.state.start);
+    const end = this.toISO(this.state.end);
+    const event = merge({}, this.state, { start, end });
     delete event.events;
+    delete event.submissions;
 
     return event;
+  }
+
+  toISO(string) {
+    return string + ':00Z';
   }
 
   genForm() {
@@ -79,6 +107,7 @@ class Admin extends React.Component {
       state: this.state,
       change: this.handleChange,
       submit: this.handleSubmit,
+      reset: this.reset,
     });
   }
 

@@ -16,47 +16,38 @@ exports.syndicate = functions.database
   .ref('/events/{eventId}')
   .onCreate(event => {
     const callback = (data, functions) => {
-      return event.data.ref.child('submissions').set(data);
+      console.log(data);
+      return event.data.ref.child('submissions/eventbrite').set(data);
     }
     const formData = event.data.val();
-    // console.log(eventful.genEventfulToken());
-    // const req = rp.post(eventful.genEventfulToken())
-    //   .then(data => console.log(decodeURI(data)))
-    //   .catch(err => console.log(err));
-    // console.log(req);
-
-    // return req;
     const req = eventbrite.genRequest(eventbrite.format(formData));
-    console.log(req);
+
     return rp.post(req)
       .then(data => callback(data, functions))
       .catch(err => console.log(err.error));
-
-
-    // rp.post(sendXing)
   });
 
-exports.eventful = functions.https
-  .onRequest((request, response) => {
-    console.log(request, response);
-    response.send();
-  });
-
-const sendXing = event => {
-  const data = {
-    title: event.title,
-    description: event.description,
-    country: 'USA',
-    selectedDate: event.start,
-    hostId: keys.xing.xingId
-  }
-
-  return ({
-    url: 'https://www.xing-events.com/api/event/create',
-    method: 'POST',
-    data: data
-  });
-}
+// exports.eventful = functions.https
+//   .onRequest((request, response) => {
+//     console.log(request, response);
+//     response.send();
+//   });
+//
+// const sendXing = event => {
+//   const data = {
+//     title: event.title,
+//     description: event.description,
+//     country: 'USA',
+//     selectedDate: event.start,
+//     hostId: keys.xing.xingId
+//   }
+//
+//   return ({
+//     url: 'https://www.xing-events.com/api/event/create',
+//     method: 'POST',
+//     data: data
+//   });
+// }
 
 // const sendEventbrite = event => {
 //   return ({
