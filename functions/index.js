@@ -1,8 +1,9 @@
 const functions = require('firebase-functions');
 const request = require('request');
 const rp = require('request-promise');
-const keys = require('./config');
-const eventful = require('./eventful');
+const keys = require('./config.js');
+const eventful = require('./eventful.js');
+const eventbrite = require('./eventbrite.js');
 
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -18,18 +19,26 @@ exports.syndicate = functions.database
       return event.data.ref.child('submissions').set(data);
     }
     const formData = event.data.val();
+    // console.log(eventful.genEventfulToken());
+    // const req = rp.post(eventful.genEventfulToken())
+    //   .then(data => console.log(decodeURI(data)))
+    //   .catch(err => console.log(err));
+    // console.log(req);
 
-    return rp.post(eventful.genEventfulToken());
-    // rp.post(sendEventbrite(formatEventbrite(formData)))
-    //   .then(data => callback(data, functions))
-    //   .catch(err => console.log(err.error));
+    // return req;
+    const req = eventbrite.genRequest(eventbrite.format(formData));
+    console.log(req);
+    return rp.post(req)
+      .then(data => callback(data, functions))
+      .catch(err => console.log(err.error));
+
 
     // rp.post(sendXing)
   });
 
 exports.eventful = functions.https
   .onRequest((request, response) => {
-    console.log(request);
+    console.log(request, response);
     response.send();
   });
 
@@ -49,21 +58,21 @@ const sendXing = event => {
   });
 }
 
-const sendEventbrite = event => {
-  return ({
-    url: 'https://www.eventbriteapi.com/v3/events/',
-    headers: { "Authorization": `Bearer ${keys.eventbrite.key}` },
-    data: { event },
-  });
-}
-
-const formatEventbrite = event => {
-  return JSON.stringify({
-    name: { html: event.name },
-    description: event.description,
-    start: { timezone: event.start_time_zone, utc: event.start },
-    end: { timezone: event.end_time_zone, utc: event.end },
-    currency: event.currency,
-    listed: false,
-  });
-}
+// const sendEventbrite = event => {
+//   return ({
+//     url: 'https://www.eventbriteapi.com/v3/events/',
+//     headers: { "Authorization": `Bearer ${keys.eventbrite.key}` },
+//     data:  event ,
+//   });
+// }
+//
+// const formatEventbrite = event => {
+//   return JSON.stringify({
+//     name: { html: event.name },
+//     description: event.description,
+//     start: { timezone: event.start_time_zone, utc: event.start },
+//     end: { timezone: event.end_time_zone, utc: event.end },
+//     currency: event.currency,
+//     listed: false,
+//   });
+// }

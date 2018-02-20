@@ -1,6 +1,4 @@
 const functions = require('firebase-functions');
-const request = require('request');
-const config = require('./config.js');
 
 module.exports = {
   genEventfulToken: () => {
@@ -10,9 +8,7 @@ module.exports = {
     return ({
       url,
       method,
-      oauth_callback,
-      oauth_consumer_key,
-      oauth_signature,
+      headers: { Authorization: `OAuth oauth_callback=${encodeURI(oauth_callback)},oauth_consumer_key=${encodeURI(oauth_consumer_key)},oauth_signature=${oauth_signature},oauth_nonce="nonce",oauth_signature_method="HMAC-SHA1"`, }
     });
   },
 
